@@ -1,94 +1,83 @@
-import InputLabel from "./InputLabel"
-import InputError from "./InputError"
-import TextInput from "./TextInput"
-import { Link, useForm } from "@inertiajs/react"
-import PrimaryButton from "./PrimaryButton"
-import { useState } from "react"
+import InputLabel from "./InputLabel";
+import InputError from "./InputError";
+import TextInput from "./TextInput";
+import { Link, useForm } from "@inertiajs/react";
+import PrimaryButton from "./PrimaryButton";
 
 function CreateProduct() {
-
-    const [notify, setNotify] = useState(false);
     const { data, setData, processing, post, errors } = useForm({
-        name: '',
-        satuan: '',
-        stock: '',
-        description: ''
-    })
+        name: "",
+        satuan: "",
+        stock: "",
+        description: "",
+    });
 
     const submit = (e) => {
-        e.preventDefault()
+        e.preventDefault();
+        post(route("products.store"));
+    };
 
-        post(route('products.store'))
-        setNotify(true)
-    }
-
-  return (
-        <>
-            <form onSubmit={submit}>
-                <div className="w-full">
-                    <div className="w-3/6 mx-10">
-                        <InputLabel htmlFor='name' value='name' />
-                        <TextInput 
-                                id="name"
-                                type="text"
-                                name="name"
-                                value={data.name}
-                                className="mt-1 block w-full"
-                                autoComplete="name"
-                                isFocused={true}
-                                onChange={(e) => setData('name', e.target.value)}/>
+    return (
+        <form onSubmit={submit} className="space-y-8">
+            <div className="form-section">
+                <p className="form-section-title">Data Produk</p>
+                <div className="form-grid">
+                    <div className="form-field">
+                        <InputLabel htmlFor="name" value="Nama Produk" className="required" />
+                        <TextInput
+                            id="name"
+                            type="text"
+                            value={data.name}
+                            placeholder="Nama produk"
+                            isFocused={true}
+                            onChange={(e) => setData("name", e.target.value)}
+                        />
                         <InputError message={errors.name} />
                     </div>
-
-                    <div className="w-3/6 mx-10">
-                        <InputLabel htmlFor='satuan' value='satuan' />
-                        <TextInput 
-                                id="satuan"
-                                type="text"
-                                name="satuan"
-                                value={data.satuan}
-                                className="mt-1 block w-full"
-                                autoComplete="satuan"
-                                isFocused={true}
-                                onChange={(e) => setData('satuan', e.target.value)}/>
+                    <div className="form-field">
+                        <InputLabel htmlFor="satuan" value="Satuan" className="required" />
+                        <TextInput
+                            id="satuan"
+                            type="text"
+                            value={data.satuan}
+                            placeholder="pcs, liter, dll"
+                            onChange={(e) => setData("satuan", e.target.value)}
+                        />
                         <InputError message={errors.satuan} />
                     </div>
-                    <div className="w-3/6 mx-10">
-                        <InputLabel htmlFor='stock' value='stock' />
-                        <TextInput 
-                                id="stock"
-                                type="text"
-                                name="stock"
-                                value={data.stock}
-                                className="mt-1 block w-full"
-                                autoComplete="stock"
-                                isFocused={true}
-                                onChange={(e) => setData('stock', e.target.value)}/>
+                    <div className="form-field">
+                        <InputLabel htmlFor="stock" value="Stok" />
+                        <TextInput
+                            id="stock"
+                            type="number"
+                            value={data.stock}
+                            placeholder="0"
+                            onChange={(e) => setData("stock", e.target.value)}
+                        />
                         <InputError message={errors.stock} />
                     </div>
-                    <div className="w-3/6 mx-10">
-                        <InputLabel htmlFor='description' value='description' />
-                        <TextInput 
-                                id="description"
-                                type="text"
-                                name="description"
-                                value={data.description}
-                                className="mt-1 block w-full"
-                                autoComplete="description"
-                                isFocused={true}
-                                onChange={(e) => setData('description', e.target.value)}/>
+                    <div className="form-field">
+                        <InputLabel htmlFor="description" value="Deskripsi" />
+                        <TextInput
+                            id="description"
+                            type="text"
+                            value={data.description}
+                            placeholder="Keterangan produk"
+                            onChange={(e) => setData("description", e.target.value)}
+                        />
                         <InputError message={errors.description} />
                     </div>
-                    <div className="flex justify-center mt-5 gap-1 mr-16">
-                        <Link href={route('products.index')} className='btn btn-error hover:bg-red-600 shadow-md hover:shadow-none transition-all ease-linear .2s'>Back</Link>
-                        <PrimaryButton className="ml-4" disabled={processing}>
-                            Save
-                        </PrimaryButton>
-                    </div>                
                 </div>
-            </form>
-        </>
-    )
+            </div>
+
+            <div className="form-actions">
+                <Link href={route("products.index")} className="btn-secondary-modern">
+                    Batal
+                </Link>
+                <PrimaryButton disabled={processing}>Simpan</PrimaryButton>
+            </div>
+        </form>
+    );
 }
 
-export default CreateProduct
+export default CreateProduct;

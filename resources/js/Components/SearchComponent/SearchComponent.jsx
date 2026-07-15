@@ -12,7 +12,7 @@ const SearchComponent = () => {
             <form method="get">
                 <div className='input-group'>
                 <input type="text" className='input input-bordered'/>
-                <button type='submit' className='btn btn-info'>Search</button>
+                <button type='submit' className='btn-primary-modern'>Search</button>
                 </div>
             </form>
             

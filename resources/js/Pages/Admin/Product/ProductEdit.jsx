@@ -1,22 +1,28 @@
-import CopyrightComponent from '@/Components/CopyrightComponent';
-import EditProduct from '@/Components/EditProduct';
-import Navbar from '@/Components/Navbar';
-import { Head } from '@inertiajs/react';
-import React from 'react'
+import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
+import EditProduct from "@/Components/EditProduct";
+import { Head, usePage } from "@inertiajs/react";
 
 function ProductEdit(props) {
+    const { auth } = usePage().props;
 
-  return (
-        <>
-            <Head title='Edit Products'/>
-            <Navbar />
-            <div className='flex justify-start w-3/6 sm:w-[94%] ml-10 bg-yellow-400 rounded-md mb-5 shadow-md'>
-                <h2 className='font-bold text-2xl pl-5 py-2'>Edit Products</h2>
+    return (
+        <AuthenticatedLayout user={auth?.user}>
+            <Head title="Edit Produk" />
+
+            <div className="page-header">
+                <div>
+                    <h1 className="page-title">Edit Produk</h1>
+                    <p className="page-subtitle">Perbarui data produk atau sparepart</p>
+                </div>
             </div>
-            <EditProduct props={props}/>
-            <CopyrightComponent />
-        </>
-    )
+
+            <div className="card-panel">
+                <div className="card-body">
+                    <EditProduct props={props} />
+                </div>
+            </div>
+        </AuthenticatedLayout>
+    );
 }
 
-export default ProductEdit
+export default ProductEdit;

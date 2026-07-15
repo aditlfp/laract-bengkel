@@ -1,25 +1,28 @@
-import { useState } from "react";
-import Navbar from "@/Components/Navbar";
+import Sidebar from "@/Components/Sidebar";
+import Topbar from "@/Components/Topbar";
 import CopyrightComponent from "@/Components/CopyrightComponent";
+import { useState } from "react";
 
 export default function Authenticated({ user, header, children }) {
-    const [showingNavigationDropdown, setShowingNavigationDropdown] =
-        useState(false);
+    const [sidebarOpen, setSidebarOpen] = useState(false);
 
     return (
-        <div className="min-h-screen bg-gray-100">
-            <Navbar user={user} />
+        <div className="app-shell">
+            <Sidebar open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
 
-            {header && (
-                <header className="bg-white shadow">
-                    <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+            <div className="content-area">
+                <Topbar onMenuClick={() => setSidebarOpen(true)} />
+
+                {header && (
+                    <div className="border-b border-slate-200 bg-white px-4 py-5 sm:px-6 lg:px-8">
                         {header}
                     </div>
-                </header>
-            )}
+                )}
 
-            <main>{children}</main>
-            <CopyrightComponent />
+                <main className="main-content">{children}</main>
+
+                <CopyrightComponent />
+            </div>
         </div>
     );
 }

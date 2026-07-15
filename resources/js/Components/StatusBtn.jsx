@@ -1,36 +1,19 @@
-const StatusBtn = () => {
+function StatusBtn({ status, onClick }) {
+    const isDone = status == 2;
     return (
-        <>
-            <svg
-                width="26px"
-                height="26px"
-                viewBox="0 0 24 24"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-            >
-                <g id="SVGRepo_bgCarrier" strokeWidth="0" />
-
-                <g
-                    id="SVGRepo_tracerCarrier"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                />
-
-                <g id="SVGRepo_iconCarrier">
-                    {" "}
-                    <path
-                        opacity="0.5"
-                        d="M12 22C7.28595 22 4.92893 22 3.46447 20.5355C2 19.0711 2 16.714 2 12C2 7.28595 2 4.92893 3.46447 3.46447C4.92893 2 7.28595 2 12 2C16.714 2 19.0711 2 20.5355 3.46447C22 4.92893 22 7.28595 22 12C22 16.714 22 19.0711 20.5355 20.5355C19.0711 22 16.714 22 12 22Z"
-                        fill="#0c974f"
-                    />{" "}
-                    <path
-                        d="M16.0303 8.96967C16.3232 9.26256 16.3232 9.73744 16.0303 10.0303L11.0303 15.0303C10.7374 15.3232 10.2626 15.3232 9.96967 15.0303L7.96967 13.0303C7.67678 12.7374 7.67678 12.2626 7.96967 11.9697C8.26256 11.6768 8.73744 11.6768 9.03033 11.9697L10.5 13.4393L14.9697 8.96967C15.2626 8.67678 15.7374 8.67678 16.0303 8.96967Z"
-                        fill="#0c974f"
-                    />{" "}
-                </g>
-            </svg>
-        </>
+        <button
+            type="button"
+            onClick={onClick}
+            className={`badge-soft cursor-pointer transition ${
+                isDone
+                    ? "bg-emerald-50 text-emerald-700 ring-1 ring-inset ring-emerald-600/10 hover:bg-emerald-100"
+                    : "bg-amber-50 text-amber-700 ring-1 ring-inset ring-amber-600/10 hover:bg-amber-100"
+            }`}
+            title="Klik untuk ubah status"
+        >
+            {isDone ? "Selesai" : "Proses"}
+        </button>
     );
-};
+}
 
 export default StatusBtn;

@@ -8,7 +8,7 @@ export default forwardRef(function TextInput(
 
     useEffect(() => {
         if (isFocused) {
-            input.current.focus();
+            input.current?.focus();
         }
     }, []);
 
@@ -16,10 +16,7 @@ export default forwardRef(function TextInput(
         <input
             {...props}
             type={type}
-            className={
-                "border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm" +
-                className
-            }
+            className={`form-input ${className}`}
             ref={input}
         />
     );

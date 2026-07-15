@@ -49,6 +49,7 @@ Route::middleware('auth', 'admin')->group( function () {
     Route::get('/fixing/search/{query}', [FixingCustomerController::class, 'search']);
     Route::patch('/update-status/{id}', [FixingCustomerController::class, 'updateStatus'])->name('status-update');
     Route::get('/exist-customer', [CustomerController::class, 'createExist'])->name('exist-customer.create');
+    Route::resource('/products', ProductController::class);
     Route::get('/laporan', [LaporanController::class, 'index'])->name('laporan.index');
     Route::get('/report-month/{month}', [LaporanController::class, 'report'])->name('report.month');
 });

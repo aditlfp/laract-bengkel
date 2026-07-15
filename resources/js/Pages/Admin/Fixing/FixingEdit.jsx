@@ -1,21 +1,27 @@
-import CopyrightComponent from "@/Components/CopyrightComponent";
+import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import EditFixing from "@/Components/FixingComponent/EditFixing";
-import Navbar from "@/Components/Navbar";
-import { Head } from "@inertiajs/react";
+import { Head, usePage } from "@inertiajs/react";
 
 const FixingEdit = (props) => {
+    const { auth } = usePage().props;
+
     return (
-        <>
-            <Head title="Edit Data Perbaikan" />
-            <Navbar />
-            <div className="flex justify-start w-3/6 sm:w-[94%] ml-10 bg-yellow-400 rounded-md mb-5 shadow-md">
-                <h2 className="font-bold text-2xl pl-5 py-2">
-                    Edit Data Perbaikan
-                </h2>
+        <AuthenticatedLayout user={auth?.user}>
+            <Head title="Edit Perbaikan" />
+
+            <div className="page-header">
+                <div>
+                    <h1 className="page-title">Edit Data Perbaikan</h1>
+                    <p className="page-subtitle">Perbarui data kerusakan kendaraan</p>
+                </div>
             </div>
-            <EditFixing props={props} />
-            <CopyrightComponent />
-        </>
+
+            <div className="card-panel">
+                <div className="card-body">
+                    <EditFixing props={props} />
+                </div>
+            </div>
+        </AuthenticatedLayout>
     );
 };
 

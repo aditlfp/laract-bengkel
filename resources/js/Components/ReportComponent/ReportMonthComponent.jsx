@@ -8,7 +8,7 @@ const ReportMonthComponent = ({ data, month }) => {
     return (
         <>
             <div>
-                <h1 className="font-black text-2xl mb-3 text-center text-blue-600">
+                <h1 className="font-black text-2xl mb-3 text-center text-amber-600">
                     YAMAHA - AKM AUTO PARTS | REPORT
                 </h1>
                 <p className="text-center text-xs font-bold">Bulan : {month}</p>

@@ -16,11 +16,11 @@ const FinalInvoices = ({ props }) => {
     return (
         <>
             <div className="bg-white border rounded-lg shadow-lg px-6 py-4 mx-5 mt-8">
-                <h1 className="font-bold text-2xl mb-3 text-center text-blue-600">
+                <h1 className="font-bold text-2xl mb-3 text-center text-amber-600">
                     YAMAHA - AKM AUTO PARTS | INVOICES
                 </h1>
                 <hr className="mb-2" />
-                <div className="bg-blue-100/50 mx-2 px-5 py-5 rounded-xl">
+                <div className="bg-amber-100/50 mx-2 px-5 py-5 rounded-xl">
                     <div className="flex justify-between mb-6">
                         <div>
                             <h1 className="text-lg font-bold">Invoice</h1>
@@ -253,7 +253,7 @@ const FinalInvoices = ({ props }) => {
 
             <hr className="mt-5" />
             <div className="bg-yellow-300/30 rounded-lg shadow-lg px-6 pt-4 pb-6 mx-5 mt-8 border mb-10">
-                <h1 className="font-bold text-2xl mb-3 text-center text-blue-600">
+                <h1 className="font-bold text-2xl mb-3 text-center text-amber-600">
                     YAMAHA - AKM AUTO PARTS | INVOICES
                 </h1>
                 <hr className="mb-2" />

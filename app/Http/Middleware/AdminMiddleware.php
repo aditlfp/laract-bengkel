@@ -17,9 +17,9 @@ class AdminMiddleware
     public function handle(Request $request, Closure $next): Response
     {
         if(Auth::user()->role_id == 2){
-            toastr()->error('You dont have permission', 'Error!!');
             Auth::logout();
-            return to_route('login');
+            // ponytail: was yoeunes/toastr, session flash works with react-toastify if wired
+            return to_route('login')->with('error', 'You dont have permission');
         }
         return $next($request);
     }

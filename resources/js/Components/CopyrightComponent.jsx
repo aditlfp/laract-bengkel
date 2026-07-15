@@ -1,21 +1,20 @@
-const CopyrightComponent = () => {
+export default function CopyrightComponent() {
     return (
-        <>
-        <div className="mt-20">
-            <footer className="footer footer-center p-4 bg-yellow-400 shadow-inner shadow-yellow-500 text-base-content fixed bottom-0">
-                <div>
-                    <p className="underline italic font-bold">
-                        Copyright © 2023 - All right reserved by{" "}
-                        <a href="https://github.com/aditlfp" target="_blank">
-                            Aditlfp
-                        </a>
-                        {" "}& SP One
-                    </p>
-                </div>
-            </footer>
-        </div>
-        </>
+        <footer className="mt-auto border-t border-slate-200 bg-white">
+            <div className="flex h-12 items-center justify-center px-4 sm:px-6 lg:px-8">
+                <p className="text-xs text-slate-400">
+                    © {new Date().getFullYear()} Bengkel AKM · by{" "}
+                    <a
+                        href="https://github.com/aditlfp"
+                        target="_blank"
+                        rel="noreferrer"
+                        className="font-medium text-amber-600 hover:text-amber-700"
+                    >
+                        Aditlfp
+                    </a>
+                    {" "}& SP One
+                </p>
+            </div>
+        </footer>
     );
-};
-
-export default CopyrightComponent;
+}

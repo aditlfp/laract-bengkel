@@ -4,202 +4,120 @@ import BtnDeleteMini from "./BtnDeleteMini";
 import Modal from "@/Components/Modal";
 import { useState } from "react";
 import SecondaryButton from "./SecondaryButton";
+import DangerButton from "./DangerButton";
 
-const isCustomer = (datas) => {
+function CustomerList({ datas }) {
     const { auth } = usePage().props;
-    const [confirmingFixDeletion, setConfirmingFixDeletion] = useState(false);
-    const { data, setData, processing } = useForm({
-        id: "",
-    });
+    const [confirmingDeletion, setConfirmingDeletion] = useState(false);
+    const [deleteId, setDeleteId] = useState(null);
+    const { processing, delete: destroy } = useForm({});
+    const rows = datas?.data || [];
 
-    // Modal
-    const confirmFixDeletion = () => {
-        setConfirmingFixDeletion(true);
+    const confirmDelete = (id) => {
+        setDeleteId(id);
+        setConfirmingDeletion(true);
     };
 
     const closeModal = () => {
-        setConfirmingFixDeletion(false);
+        setConfirmingDeletion(false);
+        setDeleteId(null);
     };
 
-    const TimeOut = () => {
-        setTimeout(() => {
-            setConfirmingFixDeletion(false);
-        }, 2000);
-    };
-    // End Modal
+    if (!rows.length) {
+        return (
+            <div className="px-6 py-12 text-center">
+                <p className="text-sm font-medium text-slate-500">Customer masih kosong</p>
+            </div>
+        );
+    }
+
     return (
-        <table className="table table-zebra table-xs">
-            <thead>
-                <tr className="bg-slate-100">
-                    <th>#</th>
-                    <th>Pemilik</th>
-                    <th>No. Plate</th>
-                    <th>Nama Kendaraan</th>
-                    <th>Tahun Kendaraan</th>
-                    <th>Model</th>
-                    <th>Model Tahun</th>
-                    <th>Warna</th>
-                    <th>Kode Warna</th>
-                    <th>Keterangan</th>
-                    <th>No. Hp</th>
-                    <th>Alamat</th>
-                    <th>Last Service Date</th>
-                    <th>Service Date</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                {datas ? (
-                    datas.map((data, i) => {
-                        return (
-                            <tr key={data.id}>
-                                <th>{i + 1}</th>
-                                <td>{data.owner}</td>
-                                <td>{data.no_plate}</td>
-                                <td>{data.nama_kendaraan}</td>
-                                <td>{data.tahun_kendaraan}</td>
-                                <td>{data.model}</td>
-                                <td>{data.tahun}</td>
-                                <td>{data.nama_warna}</td>
-                                <td>{data.code_warna}</td>
-                                <td>{data.keterangan_warna}</td>
-                                <td>{data.mobile_phone}</td>
-                                <td>{data.alamat}</td>
+        <>
+            <table className="table-modern">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Pemilik</th>
+                        <th>No. Plate</th>
+                        <th>Nama Kendaraan</th>
+                        <th>Tahun</th>
+                        <th>Model</th>
+                        <th>Model Tahun</th>
+                        <th>Warna</th>
+                        <th>Kode Warna</th>
+                        <th>Keterangan</th>
+                        <th>No. Hp</th>
+                        <th>Alamat</th>
+                        <th>Last Service</th>
+                        <th>Service Date</th>
+                        {auth.user.role_id == 1 && <th>Aksi</th>}
+                    </tr>
+                </thead>
+                <tbody>
+                    {rows.map((row, i) => (
+                        <tr key={row.id}>
+                            <td className="font-medium text-slate-500">{i + 1}</td>
+                            <td className="font-medium">{row.owner}</td>
+                            <td>
+                                <span className="badge-soft bg-slate-100 text-slate-700">
+                                    {row.no_plate}
+                                </span>
+                            </td>
+                            <td>{row.nama_kendaraan}</td>
+                            <td>{row.tahun_kendaraan}</td>
+                            <td>{row.model}</td>
+                            <td>{row.tahun}</td>
+                            <td>{row.nama_warna}</td>
+                            <td>{row.code_warna}</td>
+                            <td className="max-w-[140px] truncate">{row.keterangan_warna}</td>
+                            <td>{row.mobile_phone}</td>
+                            <td className="max-w-[160px] truncate">{row.alamat}</td>
+                            <td className="text-xs">{row.last_service_date || "—"}</td>
+                            <td className="text-xs">{row.service_date || "—"}</td>
+                            {auth.user.role_id == 1 && (
                                 <td>
-                                    {data.last_service_date ? (
-                                        data.last_service_date
-                                    ) : (
-                                        <span className="flex justify-center">
-                                            ~
-                                        </span>
-                                    )}
-                                </td>
-                                <td>{data.service_date}</td>
-                                {auth.user.role_id == 1 ? (
-                                    <td className="flex gap-1">
+                                    <div className="flex items-center gap-1.5">
                                         <Link
-                                            href={
-                                                "customer/" + data.id + "/edit"
-                                            }
+                                            href={"customer/" + row.id + "/edit"}
                                             method="get"
                                             as="button"
                                         >
                                             <BtnEditMini />
                                         </Link>
-
-                                        <Modal
-                                            show={confirmingFixDeletion}
-                                            onClose={closeModal}
-                                        >
-                                            <div className="flex justify-end items-center">
-                                                <button
-                                                    className="bg-red-600 absolute top-5 right-5 py-[0.32rem] px-3 rounded-xl text-white font-bold hover:bg-red-800 transition-all ease-in-out .2s"
-                                                    onClick={closeModal}
-                                                >
-                                                    X
-                                                </button>
-                                            </div>
-                                            <div className="m-10">
-                                                <h2 className="text-xl font-bold text-gray-900">
-                                                    Kamu Yakin Ingin Menghapus
-                                                    Data Ini ?
-                                                </h2>
-
-                                                <p className="mt-1 text-sm text-gray-600">
-                                                    Setelah data ini dihapus,
-                                                    semua sumber daya dan
-                                                    datanya akan dihapus secara
-                                                    permanen. Silahkan Anda
-                                                    untuk konfirmasikan bahwa
-                                                    Anda ingin menghapus data
-                                                    Anda secara permanen.
-                                                </p>
-
-                                                <div className="mt-6 flex justify-end">
-                                                    <SecondaryButton
-                                                        onClick={closeModal}
-                                                    >
-                                                        Batalkan
-                                                    </SecondaryButton>
-                                                    <Link
-                                                        className="ml-3 btn bg-red-400 hover:bg-red-500 transition-colors ease-linear .2s"
-                                                        disabled={processing}
-                                                        href={
-                                                            "customer/" +
-                                                            data.id
-                                                        }
-                                                        method="delete"
-                                                        data={{
-                                                            id: data.id,
-                                                        }}
-                                                        as="button"
-                                                        onClick={TimeOut}
-                                                    >
-                                                        {processing ? (
-                                                            <span className="loading loading-spinner"></span>
-                                                        ) : (
-                                                            ""
-                                                        )}
-                                                        Konfirmasi Hapus Data
-                                                    </Link>
-                                                </div>
-                                            </div>
-                                        </Modal>
-                                        <button onClick={confirmFixDeletion}>
+                                        <button type="button" onClick={() => confirmDelete(row.id)}>
                                             <BtnDeleteMini />
                                         </button>
-                                    </td>
-                                ) : (
-                                    <td></td>
-                                )}
-                            </tr>
-                        );
-                    })
-                ) : (
-                    <th>
-                        <tr colSpan="6" className="text-center">
-                            Customer Masih Kosong
+                                    </div>
+                                </td>
+                            )}
                         </tr>
-                    </th>
-                )}
-            </tbody>
-            <tfoot>
-                <tr className="bg-slate-100">
-                    <th>#</th>
-                    <th>Pemilik</th>
-                    <th>No. Plate</th>
-                    <th>Nama Kendaraan</th>
-                    <th>Tahun Kendaraan</th>
-                    <th>Model</th>
-                    <th>Model Tahun</th>
-                    <th>Warna</th>
-                    <th>Kode Warna</th>
-                    <th>Keterangan</th>
-                    <th>No. Hp</th>
-                    <th>Alamat</th>
-                    <th>Last Service Date</th>
-                    <th>Service Date</th>
-                    <th>Action</th>
-                </tr>
-            </tfoot>
-        </table>
-    );
-};
+                    ))}
+                </tbody>
+            </table>
 
-const notData = () => {
-    return (
-        <>
-            <div className="text-center my-2">
-                <span className="text-center font-bold">
-                    Customer Masih Kosong
-                </span>
-            </div>
+            <Modal show={confirmingDeletion} onClose={closeModal} maxWidth="md">
+                <div className="space-y-4">
+                    <h3 className="text-lg font-semibold text-slate-900">Hapus Customer?</h3>
+                    <p className="text-sm text-slate-600">
+                        Data customer yang dihapus tidak dapat dikembalikan.
+                    </p>
+                    <div className="flex justify-end gap-2">
+                        <SecondaryButton onClick={closeModal}>Batal</SecondaryButton>
+                        <DangerButton
+                            disabled={processing}
+                            onClick={() => {
+                                destroy(route("customer.destroy", deleteId), {
+                                    onSuccess: closeModal,
+                                });
+                            }}
+                        >
+                            Hapus
+                        </DangerButton>
+                    </div>
+                </div>
+            </Modal>
         </>
     );
-};
-
-function CustomerList({ datas }) {
-    return !datas ? notData() : isCustomer(datas.data);
 }
 
 export default CustomerList;

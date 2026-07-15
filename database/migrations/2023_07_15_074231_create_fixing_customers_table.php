@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('nama_panel');
             $table->string('lama_pengerjaan');
             $table->string('estimasi_harga');
-            $table->string('catatan_customer');
+            $table->string('catatan_customer')->nullable();
             $table->foreignIdFor(Status::class)->default('1'); // 1 = prosess | 2 = selesai
             $table->timestamps();
         });

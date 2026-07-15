@@ -1,22 +1,28 @@
-
-import CopyrightComponent from "@/Components/CopyrightComponent"
-import CreateProduct from "@/Components/CreateProduct"
-import Navbar from "@/Components/Navbar"
-import { Head } from "@inertiajs/react"
-
+import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
+import CreateProduct from "@/Components/CreateProduct";
+import { Head, usePage } from "@inertiajs/react";
 
 const ProductCreate = () => {
-  return (
-        <>
-            <Head title="Create New Product" />
-            <Navbar />
-            <div className='flex justify-start w-3/6 ml-10 bg-yellow-400 rounded-md mb-5 shadow-md'>
-                <h2 className='font-bold text-2xl pl-5 py-2'>Create New Products</h2>
-            </div>
-            <CreateProduct />
-            <CopyrightComponent />
-        </>
-    )
-}
+    const { auth } = usePage().props;
 
-export default ProductCreate
+    return (
+        <AuthenticatedLayout user={auth?.user}>
+            <Head title="Tambah Produk" />
+
+            <div className="page-header">
+                <div>
+                    <h1 className="page-title">Tambah Produk Baru</h1>
+                    <p className="page-subtitle">Input data produk atau sparepart</p>
+                </div>
+            </div>
+
+            <div className="card-panel">
+                <div className="card-body">
+                    <CreateProduct />
+                </div>
+            </div>
+        </AuthenticatedLayout>
+    );
+};
+
+export default ProductCreate;

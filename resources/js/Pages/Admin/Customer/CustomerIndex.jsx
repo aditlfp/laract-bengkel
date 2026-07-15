@@ -1,120 +1,82 @@
-import BtnDeleteMini from "@/Components/BtnDeleteMini";
-import BtnEditMini from "@/Components/BtnEditMini";
-import CopyrightComponent from "@/Components/CopyrightComponent";
+import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import CustomerList from "@/Components/CustomerList";
-import Navbar from "@/Components/Navbar";
 import Paginator from "@/Components/Paginator/Paginator";
 import { Head, Link, useForm } from "@inertiajs/react";
-import React, { useState } from "react";
 import _ from "lodash";
 
 const CustomerIndex = (props) => {
-    const { data, setData } = useForm({
-        search: "",
-    });
+    const { data, setData } = useForm({ search: "" });
+    const isAdmin = props.auth?.user?.role_id == 1;
+    const indexRoute = isAdmin ? "customer.index" : "customers.index";
 
     const debouncedSearch = _.debounce((searchQuery) => {
-        const searchUrl = route("customer.index", { search: searchQuery });
+        const searchUrl = route(indexRoute, { search: searchQuery });
         window.location.href = searchUrl;
-    }, 200);
+    }, 300);
 
     const handleSearchChange = (e) => {
         e.preventDefault();
-        const newSearchQuery = data.search;
-        debouncedSearch(newSearchQuery);
+        debouncedSearch(data.search);
     };
+
     return (
-        <>
+        <AuthenticatedLayout user={props.auth?.user}>
             <Head title="Customer" />
-            <Navbar />
-            <div>
-                <div className="flex justify-start w-3/6 sm:w-[94%] ml-10 bg-yellow-400 rounded-md mb-5 shadow-md">
-                    <h2 className="font-bold text-2xl pl-5 py-2">
-                        Daftar Data Customer
-                    </h2>
+
+            <div className="page-header">
+                <div>
+                    <h1 className="page-title">Daftar Customer</h1>
+                    <p className="page-subtitle">Kelola data customer bengkel</p>
                 </div>
-                <div className="ml-10">
-                    {props.flash.message != null && (
-                        <div className="alert alert-success w-3/6 sm:w-[94%] mb-5">
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                className="stroke-current shrink-0 h-6 w-6"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                            >
-                                <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    strokeWidth="2"
-                                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-                                />
-                            </svg>
-                            <span>{props.flash.message}</span>
-                        </div>
+                <div className="flex flex-wrap gap-2">
+                    {isAdmin && (
+                        <>
+                            <Link href={route("customer.create")} className="btn-primary-modern">
+                                + Customer Baru
+                            </Link>
+                            <Link href={route("exist-customer.create")} className="btn-success-modern">
+                                + Customer Lama
+                            </Link>
+                        </>
                     )}
-                    {props.flash.peringatan != null && (
-                        <div className="alert alert-warning w-3/6 sm:w-[94%] mb-5">
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                className="stroke-current shrink-0 h-6 w-6"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                            >
-                                <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    strokeWidth="2"
-                                    d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
-                                />
-                            </svg>
-                            <span>{props.flash.peringatan}</span>
-                        </div>
+                    {!isAdmin && (
+                        <Link href={route("customers.create")} className="btn-primary-modern">
+                            + Customer Baru
+                        </Link>
                     )}
-                </div>
-                <div className="flex justify-end mb-5 mx-10">
-                    <input
-                        type="text"
-                        id="search"
-                        className="input input-bordered rounded-r-none"
-                        value={data.search} // Bind the value to the search field
-                        onChange={(e) => setData("search", e.target.value)}
-                    />
-                    <button
-                        onClick={handleSearchChange}
-                        className="btn btn-primary rounded-l-none"
-                    >
-                        Search
-                    </button>
-                </div>
-                <div className="overflow-x-auto mx-10 rounded-md shadow-md">
-                    <CustomerList datas={props.customer} />
-                </div>
-                <div className="flex justify-center items-center mt-3">
-                    <Paginator meta={props.customer.meta} />
-                </div>
-                <div className="flex justify-end mr-10 mt-5 gap-1">
-                    <Link
-                        href={route("dashboard")}
-                        className="btn btn-error hover:bg-red-600 shadow-md hover:shadow-none transition-all ease-linear .2s"
-                    >
-                        Kembali
-                    </Link>
-                    <Link
-                        href={route("customer.create")}
-                        className="btn btn-warning hover:bg-yellow-600 shadow-md hover:shadow-none transition-all ease-linear .2s"
-                    >
-                        Buat Customer Baru +
-                    </Link>
-                    <Link
-                        href={route("exist-customer.create")}
-                        className="btn btn-success hover:bg-[#36906F] shadow-md hover:shadow-none transition-all ease-linear .2s"
-                    >
-                        Buat Customer Yang Sudah Ada
-                    </Link>
                 </div>
             </div>
-            <CopyrightComponent />
-        </>
+
+            <div className="card-panel">
+                <div className="card-header">
+                    <form onSubmit={handleSearchChange} className="flex w-full max-w-sm">
+                        <div className="relative w-full">
+                            <svg className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                            </svg>
+                            <input
+                                type="text"
+                                placeholder="Cari customer..."
+                                className="search-input"
+                                value={data.search}
+                                onChange={(e) => setData("search", e.target.value)}
+                            />
+                        </div>
+                        <button type="submit" className="btn-primary-modern ml-2">
+                            Cari
+                        </button>
+                    </form>
+                </div>
+
+                <div className="overflow-x-auto">
+                    <CustomerList datas={props.customer} />
+                </div>
+
+                <div className="flex justify-center border-t border-slate-100 p-4">
+                    <Paginator meta={props.customer.meta} />
+                </div>
+            </div>
+        </AuthenticatedLayout>
     );
 };
 

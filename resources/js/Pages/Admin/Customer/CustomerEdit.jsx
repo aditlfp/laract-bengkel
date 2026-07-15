@@ -1,21 +1,28 @@
-import CopyrightComponent from '@/Components/CopyrightComponent'
-import EditCustomer from '@/Components/EditCustomer'
-import Navbar from '@/Components/Navbar'
-import { Head } from '@inertiajs/react'
-import React from 'react'
+import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
+import EditCustomer from "@/Components/EditCustomer";
+import { Head, usePage } from "@inertiajs/react";
 
 const CustomerEdit = (props) => {
-  return (
-    <>
-        <Head title='Edit Customer'/>
-        <Navbar />
-        <div className='flex justify-start w-3/6 sm:w-[94%] ml-10 bg-yellow-400 rounded-md mb-5 shadow-md'>
-            <h2 className='font-bold text-2xl pl-5 py-2'>Edit Customer</h2>
-        </div>
-        <EditCustomer props={props} />
-        <CopyrightComponent />
-    </>
-  )
-}
+    const { auth } = usePage().props;
 
-export default CustomerEdit
+    return (
+        <AuthenticatedLayout user={auth?.user}>
+            <Head title="Edit Customer" />
+
+            <div className="page-header">
+                <div>
+                    <h1 className="page-title">Edit Data Customer</h1>
+                    <p className="page-subtitle">Perbarui informasi customer</p>
+                </div>
+            </div>
+
+            <div className="card-panel">
+                <div className="card-body">
+                    <EditCustomer props={props} />
+                </div>
+            </div>
+        </AuthenticatedLayout>
+    );
+};
+
+export default CustomerEdit;

@@ -3,87 +3,82 @@ import BtnEditMini from "./BtnEditMini";
 import BtnDeleteMini from "./BtnDeleteMini";
 
 const isProduct = (datas) => {
+    const rows = datas?.data || [];
+
+    if (!rows.length) {
+        return (
+            <div className="px-6 py-12 text-center">
+                <p className="text-sm font-medium text-slate-500">Produk masih kosong</p>
+            </div>
+        );
+    }
+
     return (
-        <table className="table table-zebra table-xs">
+        <table className="table-modern">
             <thead>
-                <tr className="bg-slate-100">
+                <tr>
                     <th>#</th>
-                    <th>Name</th>
+                    <th>Nama</th>
                     <th>Satuan</th>
-                    <th>Stock</th>
-                    <th>Description</th>
-                    <th>Action</th>
+                    <th>Stok</th>
+                    <th>Deskripsi</th>
+                    <th>Aksi</th>
                 </tr>
             </thead>
             <tbody>
-                {datas.data ? (
-                    datas.data.map((product, i) => {
-                        return (
-                            <tr key={product.id}>
-                                <th>{i + 1}</th>
-                                <td>{product.name}</td>
-                                <td>{product.satuan}</td>
-                                <td>{product.stock}</td>
-                                <td>{product.description}</td>
-                                <td className="flex gap-1">
-                                    <Link
-                                        href={
-                                            "products/" + product.id + "/edit"
-                                        }
-                                        method="get"
-                                        as="button"
-                                    >
-                                        <BtnEditMini />
-                                    </Link>
-
-                                    <Link
-                                        href={"products/" + product.id}
-                                        method="delete"
-                                        data={{ id: product.id }}
-                                        as="button"
-                                    >
-                                        <BtnDeleteMini />
-                                    </Link>
-                                </td>
-                            </tr>
-                        );
-                    })
-                ) : (
-                    <th>
-                        <tr colSpan="6" className="text-center">
-                            Products Masih Kosong
-                        </tr>
-                    </th>
-                )}
+                {rows.map((product, i) => (
+                    <tr key={product.id}>
+                        <td className="font-medium text-slate-500">{i + 1}</td>
+                        <td className="font-medium">{product.name}</td>
+                        <td>{product.satuan}</td>
+                        <td>
+                            <span
+                                className={`badge-soft ${
+                                    product.stock > 0
+                                        ? "bg-emerald-50 text-emerald-700"
+                                        : "bg-red-50 text-red-700"
+                                }`}
+                            >
+                                {product.stock}
+                            </span>
+                        </td>
+                        <td className="max-w-[220px] truncate text-slate-500">
+                            {product.description || "—"}
+                        </td>
+                        <td>
+                            <div className="flex items-center gap-1.5">
+                                <Link
+                                    href={"products/" + product.id + "/edit"}
+                                    method="get"
+                                    as="button"
+                                >
+                                    <BtnEditMini />
+                                </Link>
+                                <Link
+                                    href={"products/" + product.id}
+                                    method="delete"
+                                    data={{ id: product.id }}
+                                    as="button"
+                                >
+                                    <BtnDeleteMini />
+                                </Link>
+                            </div>
+                        </td>
+                    </tr>
+                ))}
             </tbody>
-            <tfoot>
-                <tr className="bg-slate-100">
-                    <th>#</th>
-                    <th>Name</th>
-                    <th>Satuan</th>
-                    <th>Stock</th>
-                    <th>Description</th>
-                    <th>Action</th>
-                </tr>
-            </tfoot>
         </table>
     );
 };
 
-const notData = () => {
-    return (
-        <>
-            <div className="text-center my-2">
-                <span className="text-center font-bold">
-                    Products Masih Kosong
-                </span>
-            </div>
-        </>
-    );
-};
-
 const ProductList = ({ datas }) => {
-    return !datas ? notData() : isProduct(datas);
+    return !datas ? (
+        <div className="px-6 py-12 text-center">
+            <p className="text-sm font-medium text-slate-500">Produk masih kosong</p>
+        </div>
+    ) : (
+        isProduct(datas)
+    );
 };
 
 export default ProductList;

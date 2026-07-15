@@ -7,346 +7,167 @@ import BtnInvoices from "../BtnInvoices";
 import Modal from "@/Components/Modal";
 import SecondaryButton from "../SecondaryButton";
 import DangerButton from "../DangerButton";
-import InputLabel from "../InputLabel";
-import TextInput from "../TextInput";
 
-const isFixing = (datas, statuses, props) => {
-    const [notify, setNotify] = useState(false);
+const panelMap = {
+    "panel 1.png": "Body Samping Kiri",
+    "panel 2.png": "Body Atas",
+    "panel 3.png": "Body Samping Kanan",
+    "panel 4.png": "Body Bamper Depan",
+    "panel 5.png": "Body Bamper Belakang",
+};
+
+function FixingList({ datas, statuses }) {
     const { auth } = usePage().props;
     const [confirmingFixDeletion, setConfirmingFixDeletion] = useState(false);
-    const {
-        data,
-        setData,
-        post,
-        patch,
-        errors,
-        processing,
-        delete: destroy,
-    } = useForm({
-        id: "",
-    });
+    const [deleteId, setDeleteId] = useState(null);
+    const { processing, delete: destroy } = useForm({});
 
-    // Modal
-    const confirmFixDeletion = () => {
+    const confirmDelete = (id) => {
+        setDeleteId(id);
         setConfirmingFixDeletion(true);
     };
 
     const closeModal = () => {
         setConfirmingFixDeletion(false);
+        setDeleteId(null);
     };
 
-    const TimeOut = () => {
-        setTimeout(() => {
-            setConfirmingFixDeletion(false);
-        }, 2000);
-    };
-    // End Modal
-    return (
-        <table className="table table-zebra table-xs shadow-md">
-            <thead>
-                <tr className="bg-slate-100">
-                    <th>#</th>
-                    <th>Pemilik</th>
-                    <th>No.Plat</th>
-                    <th>Jenis Kendaraan</th>
-                    <th>Warna</th>
-                    <th>Kode Warna</th>
-                    <th>Jenis Kerusakan</th>
-                    <th>Panel</th>
-                    <th>Tanggal Masuk</th>
-                    <th>Tanggal Terakhir Servis</th>
-                    <th>Lama Pengerjaan</th>
-                    <th>Status</th>
-                    <th>INV</th>
-                    <th>Aksi</th>
-                </tr>
-            </thead>
-            <tbody>
-                {datas ? (
-                    datas.map((data, i) => {
-                        return (
-                            <tr key={data.id || ""}>
-                                <th>{i + 1}</th>
-                                <input
-                                    type="text"
-                                    className="hidden"
-                                    value={data.id}
-                                />
-                                <td>{data.customer?.owner || "~"}</td>
-                                <td>{data.customer?.no_plate || "~"}</td>
-                                <td>
-                                    {data.customer?.nama_kendaraan || "~"} |{" "}
-                                    {data.customer?.model || "~"} |{" "}
-                                    {data.customer?.tahun || "~"}
-                                </td>
-                                <td>{data.customer?.nama_warna || "~"}</td>
-                                <td>{data.customer?.code_warna || "~"}</td>
-                                <td>
-                                    {data.jenis_kerusakan
-                                        ? data.jenis_kerusakan.map(
-                                              (kerusakan, index) => {
-                                                  return (
-                                                      <div
-                                                          className="dashed"
-                                                          key={index}
-                                                      >
-                                                          {kerusakan}
-                                                      </div>
-                                                  );
-                                              }
-                                          )
-                                        : "Kerusakan Kosong"}
-                                </td>
-                                <td>
-                                    {data.nama_panel
-                                        ? data.nama_panel.map(
-                                              (panel, index) => {
-                                                  if (panel == "panel 1.png") {
-                                                      return (
-                                                          <div
-                                                              className="dashed"
-                                                              key={index}
-                                                          >
-                                                              Body Samping Kiri
-                                                          </div>
-                                                      );
-                                                  }
-                                                  if (panel == "panel 2.png") {
-                                                      return (
-                                                          <div
-                                                              className="dashed"
-                                                              key={index}
-                                                          >
-                                                              Body Atas
-                                                          </div>
-                                                      );
-                                                  }
-                                                  if (panel == "panel 3.png") {
-                                                      return (
-                                                          <div
-                                                              className="dashed"
-                                                              key={index}
-                                                          >
-                                                              Body Samping Kanan
-                                                          </div>
-                                                      );
-                                                  }
-                                                  if (panel == "panel 4.png") {
-                                                      return (
-                                                          <div
-                                                              className="dashed"
-                                                              key={index}
-                                                          >
-                                                              Body Bamper Depan
-                                                          </div>
-                                                      );
-                                                  }
-                                                  if (panel == "panel 5.png") {
-                                                      return (
-                                                          <div
-                                                              className="dashed"
-                                                              key={index}
-                                                          >
-                                                              Body Bamper
-                                                              Belakang
-                                                          </div>
-                                                      );
-                                                  }
-                                              }
-                                          )
-                                        : "Tidak Ada Panel"}
-                                </td>
-                                <td>{data.customer?.service_date || "~"}</td>
-                                <td>
-                                    {data.customer?.last_service_date ||
-                                        data.customer?.service_date ||
-                                        "~"}
-                                </td>
-                                <td>{data.lama_pengerjaan}</td>
-                                <td>
-                                    {data.status_id === 1 ? (
-                                        <span className="bg-blue-400 px-2 rounded-md shadow-md">
-                                            Proccess
-                                        </span>
-                                    ) : (
-                                        <span className="bg-green-400 px-2 rounded-md shadow-md">
-                                            Complete
-                                        </span>
-                                    )}
-                                </td>
-                                <td>
-                                    <a
-                                        href={"/create-invoices/" + data.id}
-                                        method="get"
-                                        role="button"
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                    >
-                                        <BtnInvoices />
-                                    </a>
-                                </td>
-                                {auth.user.role_id == 1 ? (
-                                    <td>
-                                        <div className="flex gap-1 items-center">
-                                            <div>
-                                                <Link
-                                                    href={
-                                                        "fixing/" +
-                                                        data.id +
-                                                        "/edit"
-                                                    }
-                                                    method="get"
-                                                    as="button"
-                                                >
-                                                    <BtnEditMini />
-                                                </Link>
-                                            </div>
+    const rows = datas?.data || datas || [];
 
-                                            <div>
-                                                {data.status_id == 1 ? (
-                                                    <Link
-                                                        href={
-                                                            "update-status/" +
-                                                            data.id
-                                                        }
-                                                        method="PATCH"
-                                                        as="button"
-                                                        data={{ id: data.id }}
-                                                    >
-                                                        <StatusBtn />
-                                                    </Link>
-                                                ) : (
-                                                    <div></div>
-                                                )}
-                                            </div>
+    if (!rows.length) {
+        return (
+            <div className="px-6 py-12 text-center">
+                <p className="text-sm font-medium text-slate-500">Data perbaikan masih kosong</p>
+            </div>
+        );
+    }
 
-                                            <div>
-                                                <Modal
-                                                    show={confirmingFixDeletion}
-                                                    onClose={closeModal}
-                                                >
-                                                    <div className="flex justify-end items-center">
-                                                        <button
-                                                            className="bg-red-600 absolute top-5 right-5 py-[0.32rem] px-3 rounded-xl text-white font-bold hover:bg-red-800 transition-all ease-in-out .2s"
-                                                            onClick={closeModal}
-                                                        >
-                                                            X
-                                                        </button>
-                                                    </div>
-                                                    <div className="m-10">
-                                                        <h2 className="text-xl font-bold text-gray-900">
-                                                            Kamu Yakin Ingin
-                                                            Menghapus Data Ini ?
-                                                        </h2>
-
-                                                        <p className="mt-1 text-sm text-gray-600">
-                                                            Setelah data ini
-                                                            dihapus, semua
-                                                            sumber daya dan
-                                                            datanya akan dihapus
-                                                            secara permanen.
-                                                            Silahkan Anda untuk
-                                                            konfirmasikan bahwa
-                                                            Anda ingin menghapus
-                                                            data Anda secara
-                                                            permanen.
-                                                        </p>
-
-                                                        <div className="mt-6 flex justify-end">
-                                                            <SecondaryButton
-                                                                onClick={
-                                                                    closeModal
-                                                                }
-                                                            >
-                                                                Batalkan
-                                                            </SecondaryButton>
-                                                            <Link
-                                                                className="ml-3 btn bg-red-400 hover:bg-red-500 transition-colors ease-linear .2s"
-                                                                disabled={
-                                                                    processing
-                                                                }
-                                                                href={
-                                                                    "fixing/" +
-                                                                    data.id
-                                                                }
-                                                                method="delete"
-                                                                data={{
-                                                                    id: data.id,
-                                                                }}
-                                                                as="button"
-                                                                onClick={
-                                                                    TimeOut
-                                                                }
-                                                            >
-                                                                {processing ? (
-                                                                    <span className="loading loading-spinner"></span>
-                                                                ) : (
-                                                                    ""
-                                                                )}
-                                                                Konfirmasi Hapus
-                                                                Data
-                                                            </Link>
-                                                        </div>
-                                                    </div>
-                                                </Modal>
-                                                <button
-                                                    onClick={confirmFixDeletion}
-                                                >
-                                                    <BtnDeleteMini />
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </td>
-                                ) : (
-                                    <td></td>
-                                )}
-                            </tr>
-                        );
-                    })
-                ) : (
-                    <th>
-                        <tr colSpan="6" className="text-center">
-                            Customer Masih Kosong
-                        </tr>
-                    </th>
-                )}
-            </tbody>
-            <tfoot>
-                <tr className="bg-slate-100">
-                    <th>#</th>
-                    <th>Pemilik</th>
-                    <th>No.Plat</th>
-                    <th>Jenis Kendaraan</th>
-                    <th>Warna</th>
-                    <th>Kode Warna</th>
-                    <th>Jenis Kerusakan</th>
-                    <th>Panel</th>
-                    <th>Tanggal Masuk</th>
-                    <th>Tanggal Terakhir Servis</th>
-                    <th>Lama Pengerjaan</th>
-                    <th>Status</th>
-                    <th>INV</th>
-                    <th>Aksi</th>
-                </tr>
-            </tfoot>
-        </table>
-    );
-};
-
-const notData = () => {
     return (
         <>
-            <div className="text-center my-2">
-                <span className="text-center font-bold">
-                    Data Perbaikan Masih Kosong
-                </span>
-            </div>
+            <table className="table-modern">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Pemilik</th>
+                        <th>No. Plat</th>
+                        <th>Kendaraan</th>
+                        <th>Warna</th>
+                        <th>Kode Warna</th>
+                        <th>Kerusakan</th>
+                        <th>Panel</th>
+                        <th>Tgl Masuk</th>
+                        <th>Tgl Terakhir</th>
+                        <th>Lama</th>
+                        <th>Status</th>
+                        <th>INV</th>
+                        {auth.user.role_id == 1 && <th>Aksi</th>}
+                    </tr>
+                </thead>
+                <tbody>
+                    {rows.map((row, i) => (
+                        <tr key={row.id}>
+                            <td className="font-medium text-slate-500">{i + 1}</td>
+                            <td className="font-medium">{row.customer?.owner || "—"}</td>
+                            <td>
+                                <span className="badge-soft bg-slate-100 text-slate-700">
+                                    {row.customer?.no_plate || "—"}
+                                </span>
+                            </td>
+                            <td className="text-xs">
+                                {row.customer?.nama_kendaraan || "—"} | {row.customer?.model || "—"} | {row.customer?.tahun || "—"}
+                            </td>
+                            <td>{row.customer?.nama_warna || "—"}</td>
+                            <td>{row.customer?.code_warna || "—"}</td>
+                            <td className="max-w-[160px]">
+                                {row.jenis_kerusakan?.length ? (
+                                    row.jenis_kerusakan.map((k, idx) => (
+                                        <div className="dashed text-xs" key={idx}>{k}</div>
+                                    ))
+                                ) : (
+                                    <span className="text-slate-400">—</span>
+                                )}
+                            </td>
+                            <td className="max-w-[140px]">
+                                {row.nama_panel?.length ? (
+                                    row.nama_panel.map((panel, idx) => (
+                                        <div className="dashed text-xs" key={idx}>
+                                            {panelMap[panel] || panel}
+                                        </div>
+                                    ))
+                                ) : (
+                                    <span className="text-slate-400">—</span>
+                                )}
+                            </td>
+                            <td className="text-xs">{row.customer?.service_date || "—"}</td>
+                            <td className="text-xs">{row.customer?.last_service_date || row.customer?.service_date || "—"}</td>
+                            <td>{row.lama_pengerjaan || "—"}</td>
+                            <td>
+                                {row.status_id === 1 ? (
+                                    <span className="badge-soft bg-amber-50 text-amber-700">Proses</span>
+                                ) : (
+                                    <span className="badge-soft bg-emerald-50 text-emerald-700">Selesai</span>
+                                )}
+                            </td>
+                            <td>
+                                <a
+                                    href={"/create-invoices/" + row.id}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="inline-flex items-center rounded-lg bg-sky-50 px-2 py-1 text-xs font-semibold text-sky-700 transition hover:bg-sky-100"
+                                >
+                                    Invoice
+                                </a>
+                            </td>
+                            {auth.user.role_id == 1 && (
+                                <td>
+                                    <div className="flex items-center gap-1.5">
+                                        <Link href={"fixing/" + row.id + "/edit"} method="get" as="button">
+                                            <BtnEditMini />
+                                        </Link>
+                                        {row.status_id == 1 && (
+                                            <Link
+                                                href={"update-status/" + row.id}
+                                                method="PATCH"
+                                                as="button"
+                                                data={{ id: row.id }}
+                                            >
+                                                <StatusBtn />
+                                            </Link>
+                                        )}
+                                        <button type="button" onClick={() => confirmDelete(row.id)}>
+                                            <BtnDeleteMini />
+                                        </button>
+                                    </div>
+                                </td>
+                            )}
+                        </tr>
+                    ))}
+                </tbody>
+            </table>
+
+            <Modal show={confirmingFixDeletion} onClose={closeModal} maxWidth="md">
+                <div className="space-y-4">
+                    <h3 className="text-lg font-semibold text-slate-900">Hapus Data Perbaikan?</h3>
+                    <p className="text-sm text-slate-600">
+                        Data perbaikan yang dihapus tidak dapat dikembalikan.
+                    </p>
+                    <div className="flex justify-end gap-2">
+                        <SecondaryButton onClick={closeModal}>Batal</SecondaryButton>
+                        <DangerButton
+                            disabled={processing}
+                            onClick={() => {
+                                destroy(route("fixing.destroy", deleteId), {
+                                    onSuccess: closeModal,
+                                });
+                            }}
+                        >
+                            Hapus
+                        </DangerButton>
+                    </div>
+                </div>
+            </Modal>
         </>
     );
-};
-
-function FixingList({ datas }) {
-    return datas === null ? notData() : isFixing(datas.data);
 }
 
 export default FixingList;
